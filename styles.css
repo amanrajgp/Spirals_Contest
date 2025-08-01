@@ -221,6 +221,34 @@ main {
   height: 100px;
   animation-delay: 2s;
 }
+* Add to Hero Section */
+#hero::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: transparent;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.hero-star {
+  position: absolute;
+  background: linear-gradient(90deg, #fffbe6, #b6ffe0);
+  border-radius: 50%;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: 0 0 13px 3px #80ffdf7d;
+  animation: heroStarTwinkle 5s infinite;
+  z-index: 2;
+}
+
+@keyframes heroStarTwinkle {
+  0%, 100% { opacity: 0.8; transform: scale(1); }
+  50% { opacity: 0.2; transform: scale(0.8); }
+}
 
 .explore-btn {
   display: inline-block;
@@ -258,7 +286,6 @@ section {
   min-height: 100vh;
   padding: 80px;
   position: relative;
-  transition: opacity 0.8s ease, transform 0.8s ease;
   opacity: 0;
   transform: translateY(50px);
   margin: 20px auto;
@@ -266,6 +293,9 @@ section {
   background: var(--section-bg);
   border-radius: 20px;
   box-shadow: 0 30px 60px rgba(36, 80, 54, 0.12);
+  transition:
+    opacity 0.8s ease,
+    transform 0.8s ease;
 }
 
 section.show {
@@ -275,18 +305,48 @@ section.show {
 
 /* 3D Spiral Effect for Sections */
 section.spiral-3d {
-  transform: rotateY(45deg) rotateZ(35deg) scale(0.7) translateZ(-700px) translateY(100px);
+  /* Initial spiral 3D transform */
+  transform:
+    rotateY(45deg)
+    rotateZ(35deg)
+    scale(0.7)
+    translateZ(-700px)
+    translateY(100px);
   transform-style: preserve-3d;
   backface-visibility: hidden;
   will-change: transform, opacity;
-  transition: 
+  opacity: 0;
+  /* Unified transition properties */
+  transition:
     opacity 1.1s cubic-bezier(.36,2.07,.22,.97),
-    transform 1.7s cubic-bezier(.36,2.07,.22,.97);
+    transform 1.7s cubic-bezier(.36,2.07,.22,.97),
+    box-shadow 0.5s ease;
 }
 
 section.spiral-3d.show {
   opacity: 1;
-  transform: rotateY(0) rotateZ(0) scale(1) translateZ(0) translateY(0);
+  transform:
+    rotateY(0)
+    rotateZ(0)
+    scale(1)
+    translateZ(0)
+    translateY(0);
+}
+
+section.spiral-3d:hover {
+  transform:
+    rotateY(15deg)
+    rotateZ(5deg)
+    scale(1)
+    translateZ(50px)
+    translateY(0);
+  box-shadow: 0 50px 80px rgba(36, 80, 54, 0.3);
+  z-index: 10;
+}
+
+/* Reset animation state on hover for child elements */
+section.spiral-3d:hover .section-content > * {
+  animation: none !important;
 }
 
 .section-content {
@@ -295,6 +355,7 @@ section.spiral-3d.show {
   gap: 44px;
   backface-visibility: hidden;
 }
+
 
 /* Image Slider */
 .image-slider {
@@ -372,41 +433,48 @@ section.spiral-3d.show {
   text-align: center;
 }
 
+/* Updated Importance Section with Spiral Animation */
 .importance-list {
   list-style: none;
   max-width: 700px;
   margin: 0 auto;
   text-align: left;
+  position: relative;
+  height: 600px;
+  perspective: 1000px;
 }
 
 .importance-item {
-  position: relative;
+  position: absolute;
+  width: 100%;
   padding: 1.5rem 2rem 1.5rem 4rem;
-  margin-bottom: 1.5rem;
   background: var(--card-bg);
   border-radius: 15px;
   box-shadow: 0 5px 15px rgba(70, 166, 110, 0.06);
-  transform: translateX(-50px);
   opacity: 0;
-  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform-style: preserve-3d;
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
 .importance-item.show {
-  transform: translateX(0);
   opacity: 1;
 }
 
-.importance-item::before {
-  content: '';
-  position: absolute;
-  left: 1.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  width: 30px;
-  height: 30px;
-  background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><path fill="%235baa47" d="M50,0 C70,20 80,40 50,50 C20,60 30,80 50,100" /></svg>') center/contain no-repeat;
-  animation: spin 13s linear infinite;
-}
+/* Spiral positioning for items */
+.importance-item:nth-child(1) { transform: translate(-150px, 50px) rotateY(90deg); }
+.importance-item:nth-child(1).show { transform: translate(0, 0) rotateY(0); }
+
+.importance-item:nth-child(2) { transform: translate(150px, 100px) rotateY(-90deg); }
+.importance-item:nth-child(2).show { transform: translate(0, 100px) rotateY(0); }
+
+.importance-item:nth-child(3) { transform: translate(-200px, 200px) rotateY(120deg); }
+.importance-item:nth-child(3).show { transform: translate(0, 200px) rotateY(0); }
+
+.importance-item:nth-child(4) { transform: translate(200px, 300px) rotateY(-120deg); }
+.importance-item:nth-child(4).show { transform: translate(0, 300px) rotateY(0); }
+
+.importance-item:nth-child(5) { transform: translate(-150px, 400px) rotateY(150deg); }
+.importance-item:nth-child(5).show { transform: translate(0, 400px) rotateY(0); }
 
 /* Facts Section */
 #fun-facts {
@@ -524,6 +592,7 @@ section.spiral-3d.show {
 /* Credits Section */
 #credits {
   background: linear-gradient(135deg, #f5fff7, #e0ffe6);
+  perspective: 2000px;
 }
 
 .credits-container {
@@ -532,6 +601,7 @@ section.spiral-3d.show {
   justify-content: center;
   gap: 40px;
   margin-top: 3rem;
+  transform-style: preserve-3d;
 }
 
 .credit-card {
@@ -540,49 +610,108 @@ section.spiral-3d.show {
   border-radius: 20px;
   box-shadow: 0 20px 40px rgba(40, 140, 60, 0.10);
   overflow: hidden;
-  transition: all 0.5s;
-  transform: translateY(50px);
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transform: translateY(100px) rotateX(90deg);
   opacity: 0;
+  position: relative;
 }
 
 .credit-card.show {
-  transform: translateY(0);
+  transform: translateY(0) rotateX(0);
   opacity: 1;
 }
 
-.credit-card:nth-child(1) { transition-delay: 0.2s; }
-.credit-card:nth-child(2) { transition-delay: 0.4s; }
-.credit-card:nth-child(3) { transition-delay: 0.6s; }
+/* Individual card animations */
+.credit-card:nth-child(1) { 
+  transition-delay: 0.2s;
+  transform-origin: bottom left;
+}
+.credit-card:nth-child(2) { 
+  transition-delay: 0.4s;
+  transform-origin: bottom center;
+}
+.credit-card:nth-child(3) { 
+  transition-delay: 0.6s;
+  transform-origin: bottom right;
+}
+
+.credit-card:hover {
+  transform: translateY(-10px) rotateX(5deg) scale(1.03);
+  box-shadow: 0 30px 60px rgba(40, 140, 60, 0.2);
+}
 
 .credit-image {
   width: 100%;
   height: 250px;
   object-fit: cover;
+  transform: scale(1.1);
+  transition: transform 0.8s ease;
+}
+
+.credit-card:hover .credit-image {
+  transform: scale(1);
 }
 
 .credit-info {
   padding: 2rem;
   text-align: center;
+  transform: translateZ(30px);
 }
 
 .credit-name {
   font-size: 1.5rem;
   margin-bottom: 0.5rem;
   color: var(--accent);
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.6s ease 0.3s;
 }
 
 .credit-role {
   font-size: 1rem;
   color: #468c6a;
   margin-bottom: 1rem;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.6s ease 0.4s;
 }
 
 .credit-desc {
   font-size: 0.95rem;
   line-height: 1.6;
   color: #374330;
+  transform: translateY(20px);
+  opacity: 0;
+  transition: all 0.6s ease 0.5s;
 }
 
+.credit-card.show .credit-name,
+.credit-card.show .credit-role,
+.credit-card.show .credit-desc {
+  transform: translateY(0);
+  opacity: 1;
+}
+.text-content {
+  width: 55%;
+  padding: 20px;
+  position: relative;
+  overflow: hidden;
+  height: 400px;
+}
+
+.text-slide {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: opacity 0.8s ease, transform 0.8s ease;
+  transform: translateY(30px);
+}
+
+.text-slide.active {
+  opacity: 1;
+  transform: translateY(0);
+}
 /* Thank You Section */
 #thank-you {
   background: linear-gradient(135deg, #194d33, #1f7f4c);
